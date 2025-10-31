@@ -1,0 +1,2 @@
+
+ConfigRoad = 'Config/drugkb.config'
