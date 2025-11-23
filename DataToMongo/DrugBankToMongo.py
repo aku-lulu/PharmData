@@ -20,6 +20,12 @@ class DrugBanktoMongo:
         self.collection = self.db.collection
 
     def update_entry_forindexing(self, e, slim=True):
+        """
+        更新条目，处理数据格式，类型转换
+        :param e: 待处理的数据条目
+        :param slim: slim模式
+        :return:
+        """
 
         # 需要处理为列表的属性
         LIST_ATTRS = ["transporters", "drug-interactions", "food-interactions",
@@ -71,6 +77,11 @@ class DrugBanktoMongo:
 
     # Index DrugBank entry with MongoDB
     def mongodb_index_entry(self, entry):
+        """
+        将单条数据条目索引到mongodb
+        :param entry: 数据条目
+        :return: 成功返回True，失败返回False
+        """
         try:
             self.update_entry_forindexing(entry, slim=self.slim)
             docid = self.getdrugid(entry)
@@ -83,6 +94,11 @@ class DrugBanktoMongo:
         return r
 
     def getdrugid(self, e):
+        """
+        获取药品id
+        :param e: 数据
+        :return: 药品id
+        """
         if isinstance(e['drugbank-id'], list):
             eid = e['drugbank-id'][0]['#text']
         else:
@@ -90,12 +106,20 @@ class DrugBanktoMongo:
         return eid
 
     def save_to_mongo(self):
+        """
+        将数据保存到mongodb
+        :return: None
+        """
         parser = DrugBankParse()
         for entry in parser:
             # 处理每个解析的entry并入库
             self.mongodb_index_entry(entry)
 
     def clear_drugbank_data(self):
+        """
+        清空数据
+        :return: 删除结果
+        """
         config = configparser.ConfigParser()
         config.read(ConfigRoad)
 

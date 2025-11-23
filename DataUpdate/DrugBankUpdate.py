@@ -12,6 +12,11 @@ class DrugBankUpdate:
         self.config = configparser.ConfigParser()
 
     def extract_version_from_html(self, html_content):
+        """
+        获取网页中的版本号
+        :param html_content: html页面内容
+        :return: 提取到的版本号
+        """
         soup = BeautifulSoup(html_content, 'html.parser')
 
         version_pattern = r'\b(\d+\.\d+\.\d+)\b'
@@ -26,6 +31,11 @@ class DrugBankUpdate:
         return None
 
     def update_config_version(self, new_version):
+        """
+        更新配置文件中的版本号
+        :param new_version: 新版本号
+        :return: 成功返回True，失败返回False
+        """
         try:
             self.config.read(self.config_path, encoding='utf-8')
             if not self.config.has_section('drugbank'):
@@ -40,6 +50,12 @@ class DrugBankUpdate:
             return False
 
     def compare_versions(self, web_version, config_version):
+        """
+        比较网页版本号和配置文件中的版本号
+        :param web_version: 网页版本号
+        :param config_version: 配置文件中的版本号
+        :return: 比较结果字典
+        """
         if not web_version or not config_version:
             return {
                 'is_same': False,
@@ -67,6 +83,10 @@ class DrugBankUpdate:
         }
 
     def check_drugbank_version_update(self):
+        """
+        检查版本更新
+        :return: 检查结果
+        """
         try:
             self.config.read(self.config_path, encoding='utf-8')
             url = self.config.get('drugbank', 'url')
@@ -93,6 +113,10 @@ class DrugBankUpdate:
             }
 
     def auto_update_check(self):
+        """
+        检查并更新配置文件流程
+        :return: 需要更新返回True，不需要更新返回False
+        """
         result = self.check_drugbank_version_update()
 
         if result['need_update'] and result['web_version']:

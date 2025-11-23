@@ -7,11 +7,9 @@
 # @Software: PyCharm
 
 """ Index Nsids csv dataset with MongoDB"""
-#########################################################################################################################################
 
 import csv
 import configparser
-import re
 
 from Utilities.ReadConfig import ConfigRoad
 
@@ -217,6 +215,10 @@ class BiogridParse:
                 yield each
 
     def run(self):
+        """
+        运行解析流程
+        :return: 解析后的数据记录生成器
+        """
         for i in range(0, int(self.config.get('biogrid', 'data_path_num'))):
             self.to_csv(self.config.get('biogrid', 'data_path_' + str(i + 1)))
             for record in self.parse(self.config.get('biogrid', 'data_path_' + str(i + 1))):

@@ -4,11 +4,9 @@ import zipfile
 import xmltodict
 import configparser
 from Utilities.ReadConfig import ConfigRoad
-import zipfile
-import os
+
 # 读取DrugBank XML文件并解析的类
 class DrugBankParse:
-
     def __init__(self):
         self.config_path = ConfigRoad
         self.config = configparser.ConfigParser()
@@ -16,13 +14,20 @@ class DrugBankParse:
         self.infile = self.config.get('drugbank', 'file')
 
     def __iter__(self):
-        # 打开并解析普通XML文件
+        """
+        打开并解析普通XML文件
+        :return: 解析后的数据记录生成器
+        """
         with open(self.infile, 'rb') as inf:
             for entry in self._parse_file(inf):
                 yield entry
 
     def _parse_file(self, file_obj):
-        # 使用xmltodict解析XML内容，逐个生成元素
+        """
+        使用xmltodict解析XML内容，逐个生成元素
+        :param file_obj: 文件对象
+        :return: 解析后的XML条目生成器
+        """
         def item_callback(_, entry):
             self.entries.append(entry)
             return True  # 表示继续解析

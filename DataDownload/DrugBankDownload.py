@@ -21,6 +21,13 @@ class DrugbankDownload:
         self.url = self.url_front + self.version + self.url_back
 
     def download_file(self, url, save_path):
+        '''
+        下载数据库文件
+        :param url: 文件下载链接
+        :param save_path: 文件保存路径
+        :return: 下载成功返回True，下载失败返回False
+        '''
+        # 若路径不存在，则创建目录
         if not os.path.exists(os.path.dirname(save_path)):
             os.makedirs(os.path.dirname(save_path))
 
@@ -35,6 +42,7 @@ class DrugbankDownload:
             total_size = int(response.headers.get('content-length', 0))
             print(f"文件大小: {total_size / (1024 * 1024):.2f} MB")
 
+            # 打开文件进行写入，显示下载进度条
             with open(save_path, 'wb') as f, tqdm(
                     desc=os.path.basename(save_path),
                     total=total_size,
@@ -42,11 +50,12 @@ class DrugbankDownload:
                     unit_scale=True,
                     unit_divisor=1024,
             ) as bar:
+                # 分块下载
                 for data in response.iter_content(chunk_size=8192):
                     if data:
                         f.write(data)
                         bar.update(len(data))
-
+            # 下载后获取实际文件的大小
             actual_size = os.path.getsize(save_path)
             print(f"下载完成,文件大小: {actual_size / (1024 * 1024):.2f} MB")
             return True
@@ -62,6 +71,10 @@ class DrugbankDownload:
             return False
 
     def start_download(self):
+        '''
+        开始下载数据库文件
+        :return:
+        '''
         success = self.download_file(self.url, self.save_path)
         if success:
             print("下载成功！")

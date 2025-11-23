@@ -18,6 +18,10 @@ class BiogridToMongo:
         self.data_path = self.config.get('biogrid', 'data_path_1')
 
     def to_mongo(self):
+        """
+        将数据导入mongodb
+        :return:
+        """
         self.biogrid_parser.to_csv(self.data_path)
         dict_data_generator = self.biogrid_parser.parse(self.data_path)
 
@@ -26,11 +30,19 @@ class BiogridToMongo:
             self.db_connection.collection.insert_one(entry)
 
     def close(self):
+        """
+        关闭数据库连接
+        :return:
+        """
         # 关闭 MongoClient
         self.db_connection.collection.database.client.close()
         print("Database connection closed.")
 
     def clear_biogrid_data(self):
+        """
+        清空数据库数据
+        :return: 删除结果
+        """
         config = configparser.ConfigParser()
         config.read(ConfigRoad)
 

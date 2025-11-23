@@ -9,9 +9,6 @@ from Utilities.ReadConfig import ConfigRoad
 
 
 class WikipathwaysToMongo:
-    """
-    Wikipathway数据导入MongoDB数据库类
-    """
     def __init__(self, cfgfile):
         self.config = configparser.ConfigParser()
         self.cfgfile = cfgfile

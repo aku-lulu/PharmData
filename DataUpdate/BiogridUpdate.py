@@ -12,6 +12,11 @@ class BiogridUpdate:
         self.config = configparser.ConfigParser()
 
     def extract_version_from_html(self, html_content):
+        """
+        提取版本号
+        :param html_content: 页面内容
+        :return: 提前到的版本号
+        """
         soup = BeautifulSoup(html_content, 'html.parser')
         page_text = soup.get_text()
         version_matches = re.findall(r'BIOGRID-\d+\.\d+\.\d+', page_text)
@@ -23,10 +28,20 @@ class BiogridUpdate:
         return None
 
     def _select_latest_version(self, versions):
+        """
+        从版本列表中选择最新版本
+        :param versions: 版本列表
+        :return: 最新版本号
+        """
         if not versions:
             return None
 
         def version_key(version_str):
+            """
+            版本号排序函数
+            :param version_str: 版本字符串
+            :return: 版本号元组
+            """
             match = re.search(r'BIOGRID-(\d+)\.(\d+)\.(\d+)', version_str)
             if match:
                 return tuple(map(int, match.groups()))
@@ -39,6 +54,10 @@ class BiogridUpdate:
             return versions[0]
 
     def get_file_name_from_config(self):
+        """
+        从配置文件中获取版本信息
+        :return: 获取到的文件信息
+        """
         if not os.path.exists(self.config_path):
             return None
 
@@ -47,6 +66,12 @@ class BiogridUpdate:
         return file_name
 
     def compare_versions(self, web_version, config_version):
+        """
+        比较版本号是否一致
+        :param web_version: 网页中的版本号
+        :param config_version: 配置文件中的版本号
+        :return: 比较结果
+        """
         if not web_version or not config_version:
             return {
                 'is_same': False,
@@ -70,6 +95,11 @@ class BiogridUpdate:
         }
 
     def check_biogrid_version_update(self, url):
+        """
+        检查版本更新
+        :param url: 网页
+        :return: 检查结果
+        """
         try:
             response = requests.get(url, timeout=10)
             response.raise_for_status()
